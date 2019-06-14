@@ -1,0 +1,12 @@
+.bg {
+  background-image: url("../../static/ax.jpg");
+  background-repeat: repeat;
+  min-height: 100vh;
+}
+
+.footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
