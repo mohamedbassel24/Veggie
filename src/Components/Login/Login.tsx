@@ -2,6 +2,7 @@ import React from "react";
 import { Tabs, Card, Form, Icon, Input, Checkbox, Button, Layout } from "antd";
 import NavBar from "../LandingPage/NavBar/NavBar";
 import Signin from "./Signin/Signin";
+import Signup from "./Signup/Signup";
 const { TabPane } = Tabs;
 
 export default function Login(Props) {
@@ -17,7 +18,7 @@ export default function Login(Props) {
               <Signin />
             </TabPane>
             <TabPane tab="Signup" key="2">
-              Content of Tab 2
+              <Signup />
             </TabPane>
           </Tabs>
         </Card>
