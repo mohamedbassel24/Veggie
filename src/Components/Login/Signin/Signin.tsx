@@ -16,7 +16,7 @@ const Signin = ({
       <Form onSubmit={handleSubmit} style={{ textAlign: "left" }}>
         <Form.Item>
           <Input
-            prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
+            suffix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
             placeholder="Enter your E-mail Address"
             value={values.email}
             onChange={handleChange}
@@ -26,7 +26,7 @@ const Signin = ({
         </Form.Item>
         <Form.Item>
           <Input
-            prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
+            suffix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
             placeholder="Enter your Password"
             value={values.password}
             onChange={handleChange}
@@ -45,7 +45,7 @@ const Signin = ({
     <Form onSubmit={handleSubmit} style={{ textAlign: "left" }}>
       <Form.Item>
         <Input
-          prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
+          suffix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
           placeholder="Enter your E-mail Address"
           value={values.email}
           onChange={handleChange}
@@ -58,7 +58,7 @@ const Signin = ({
       </Form.Item>
       <Form.Item>
         <Input
-          prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
+          suffix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
           placeholder="Enter your Password"
           value={values.password}
           onChange={handleChange}

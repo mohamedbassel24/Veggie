@@ -20,7 +20,17 @@ const Signup = ({
     >
       <Form.Item>
         <Input
-          prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
+          suffix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+          placeholder="Enter your Name"
+          value={values.name}
+          onChange={handleChange}
+          type="text"
+          name="name"
+        />
+      </Form.Item>
+      <Form.Item>
+        <Input
+          suffix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
           placeholder="Enter your E-mail Address"
           value={values.email}
           onChange={handleChange}
@@ -31,7 +41,7 @@ const Signup = ({
 
       <Form.Item>
         <Input
-          prefix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
+          suffix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
           placeholder="Enter your Password"
           value={values.password}
           onChange={handleChange}
@@ -43,6 +53,10 @@ const Signup = ({
         <DatePicker
           name="date"
           value={values.date}
+          suffixIcon={
+            <Icon type="calendar" style={{ color: "rgba(0,0,0,.25)" }} />
+          }
+          placeholder="Your Birth Date"
           onChange={(date, dateString) => {
             return setFieldValue("date", date);
           }}
@@ -50,25 +64,26 @@ const Signup = ({
       </Form.Item>
       <Form.Item>
         <Checkbox name="promos" onChange={handleChange}>
-          Subscribe to promotions
+          Subscribe to weekly newsletter
         </Checkbox>
       </Form.Item>
       <Button type="primary" htmlType="submit" disabled={isSubmitting}>
-        Log in
+        Signup
       </Button>
     </Form>
   );
 };
 export default withFormik({
   mapPropsToValues: () => ({
+    name: "",
     email: "",
     password: "",
-    date: moment(),
+    date: null,
     promos: false
   }),
   handleSubmit: (values, { setSubmitting }) => {
     setTimeout(() => {
-      console.log(values.date);
+      console.log(values);
       setSubmitting(false);
     }, 1000);
   }
