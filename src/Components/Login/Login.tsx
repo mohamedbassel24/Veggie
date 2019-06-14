@@ -1,10 +1,10 @@
 import React from "react";
 import { Tabs, Card, Form, Icon, Input, Checkbox, Button, Layout } from "antd";
 import NavBar from "../LandingPage/NavBar/NavBar";
+import Signin from "./Signin/Signin";
 const { TabPane } = Tabs;
 
 export default function Login(Props) {
-  console.log(Props.location);
   let tab: number =
     Props.location.state === undefined ? 1 : Props.location.state.tab;
   return (
@@ -14,7 +14,7 @@ export default function Login(Props) {
         <Card style={{ textAlign: "center", width: "50%", margin: "auto" }}>
           <Tabs tabPosition="left" defaultActiveKey={tab.toString()}>
             <TabPane tab="Login" key="1">
-              Content of Tab 1
+              <Signin />
             </TabPane>
             <TabPane tab="Signup" key="2">
               Content of Tab 2
