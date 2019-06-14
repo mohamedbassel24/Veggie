@@ -4,7 +4,9 @@ import NavBar from "../LandingPage/NavBar/NavBar";
 const { TabPane } = Tabs;
 
 export default function Login(Props) {
-  let tab: number = Props.location.state.tab;
+  console.log(Props.location);
+  let tab: number =
+    Props.location.state === undefined ? 1 : Props.location.state.tab;
   return (
     <div className="bg">
       <NavBar />
