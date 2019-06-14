@@ -1,6 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar/NavBar";
-import { Layout, Row, Col, Typography, Icon, Card, Carousel, Tag } from "antd";
+import { Layout, Row, Col, Typography, Card, Carousel } from "antd";
 import "./LandingPage.css";
 import Title from "antd/lib/skeleton/Title";
 
@@ -41,6 +41,7 @@ export default function LandingPage() {
         <Carousel effect="fade" dots={false} autoplay={true}>
           <div style={{ textAlign: "center", maxHeight: "50%" }}>
             <img
+              alt="img"
               src="https://mymodernmet.com/wp/wp-content/uploads/2017/12/how-to-find-art-niche-6.jpg"
               style={{
                 maxHeight: "50vh",
@@ -52,6 +53,7 @@ export default function LandingPage() {
           </div>
           <div>
             <img
+              alt="img"
               src="https://www.bls.gov/careeroutlook/2015/images/creative_cover.jpg"
               style={{
                 maxHeight: "50vh",
@@ -63,6 +65,7 @@ export default function LandingPage() {
           </div>
           <div>
             <img
+              alt="img"
               src="https://s23932.pcdn.co/wp-content/uploads/2018/04/GettyImages-158315317-1024x683.jpg"
               style={{
                 maxHeight: "50vh",

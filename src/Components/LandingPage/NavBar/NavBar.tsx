@@ -1,18 +1,11 @@
-import React, { Component } from "react";
-import Logo from "../../static/logo.png";
-import {
-  faGithub,
-  faTwitter,
-  faTwitch,
-  faMendeley
-} from "@fortawesome/free-brands-svg-icons";
+import React from "react";
 
 import { Link } from "react-router-dom";
-import { Button, Tooltip } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Layout, Menu, Breadcrumb, Icon, Input } from "antd";
+import { Button } from "antd";
 
-const { Header, Content, Footer } = Layout;
+import { Layout, Menu, Icon } from "antd";
+
+const { Header } = Layout;
 interface Props {}
 const NavBar: React.FC<Props> = props => {
   return (

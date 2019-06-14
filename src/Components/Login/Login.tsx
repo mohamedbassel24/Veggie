@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs, Card, Form, Icon, Input, Checkbox, Button, Layout } from "antd";
+import { Tabs, Card, Layout } from "antd";
 import NavBar from "../LandingPage/NavBar/NavBar";
 import Signin from "./Signin/Signin";
 import Signup from "./Signup/Signup";

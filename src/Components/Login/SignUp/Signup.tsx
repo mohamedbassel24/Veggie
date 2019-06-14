@@ -1,7 +1,6 @@
 import React from "react";
-import { withFormik, Field } from "formik";
+import { withFormik } from "formik";
 import { Form, Input, Icon, Button, Checkbox, DatePicker } from "antd";
-let moment = require("moment");
 
 const Signup = ({
   values,

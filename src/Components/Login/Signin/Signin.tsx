@@ -1,5 +1,5 @@
 import React from "react";
-import { withFormik, Field, yupToFormErrors } from "formik";
+import { withFormik } from "formik";
 import { Form, Icon, Input, Button, Spin, Alert } from "antd";
 let yup = require("yup");
 
@@ -11,7 +11,7 @@ const Signin = ({
   errors,
   touched
 }) => {
-  return isSubmitting == true ? (
+  return isSubmitting === true ? (
     <Spin size="large" tip="Submitting...">
       <Form onSubmit={handleSubmit} style={{ textAlign: "left" }}>
         <Form.Item>
