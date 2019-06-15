@@ -1,7 +1,7 @@
 import React from "react";
 import { withFormik } from "formik";
 import { Form, Icon, Input, Button, Spin, Alert } from "antd";
-let yup = require("yup");
+import * as yup from "yup";
 
 const Signin = ({
   values,
@@ -35,7 +35,12 @@ const Signin = ({
           />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={isSubmitting}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={isSubmitting}
+            size="large"
+          >
             Log in
           </Button>
         </Form.Item>
@@ -48,6 +53,7 @@ const Signin = ({
           suffix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
           placeholder="Enter your E-mail Address"
           value={values.email}
+          autoFocus={true}
           onChange={handleChange}
           type="email"
           name="email"
@@ -70,7 +76,12 @@ const Signin = ({
         ) : null}
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit" disabled={isSubmitting}>
+        <Button
+          type="primary"
+          htmlType="submit"
+          disabled={isSubmitting}
+          size="large"
+        >
           Log in
         </Button>
       </Form.Item>
