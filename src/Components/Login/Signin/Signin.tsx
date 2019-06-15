@@ -2,6 +2,8 @@ import React from "react";
 import { withFormik } from "formik";
 import { Form, Icon, Input, Button, Spin, Alert } from "antd";
 import * as yup from "yup";
+import Axios from "axios";
+import { async } from "q";
 
 const Signin = ({
   values,
@@ -91,11 +93,19 @@ const Signin = ({
 
 export default withFormik({
   mapPropsToValues: () => ({ email: "", password: "" }),
-  handleSubmit: (values, { setSubmitting }) => {
-    setTimeout(() => {
-      console.log(values);
-      setSubmitting(false);
-    }, 2000);
+  handleSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+    const authdata = {
+      email: values.email,
+      password: values.password,
+      returnSecureToken: true
+    };
+    await Axios.post(
+      "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDAXLmBDlEIbiyD2Gyb1U2OMCqpIpzPweE",
+      authdata
+    )
+      .then(res => resetForm())
+      .catch(err => setErrors({ password: "Wrong Username or Password" }));
+    setSubmitting(false);
   },
   validationSchema: yup.object().shape({
     email: yup

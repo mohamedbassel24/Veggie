@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import { withFormik } from "formik";
 import {
   Form,
@@ -159,6 +160,7 @@ const Signup = ({
             Subscribe to weekly newsletter
           </Checkbox>
         </Form.Item>
+
         <Button
           type="primary"
           htmlType="submit"
@@ -180,11 +182,25 @@ export default withFormik({
     date: null,
     promos: false
   }),
-  handleSubmit: (values, { setSubmitting }) => {
-    setTimeout(() => {
-      console.log(values);
-      setSubmitting(false);
-    }, 1000);
+  handleSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
+    const data = {
+      email: values.email,
+      password: values.password,
+      returnSecureToken: true
+    };
+    await axios
+      .post(
+        "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyDAXLmBDlEIbiyD2Gyb1U2OMCqpIpzPweE",
+        data
+      )
+      .then(res => {
+        resetForm();
+        setSubmitting(true);
+      })
+      .catch(err => {
+        setErrors({ email: "Email is already taken." });
+      });
+    setSubmitting(false);
   },
   validationSchema: yup.object().shape({
     name: yup
