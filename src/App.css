@@ -1,6 +1,0 @@
-.app {
-  background-image: url("./static/papyrus-dark.png");
-  background-repeat: repeat;
-
-  min-height: 100vh; /* Resize the background image to cover the entire container */
-}
