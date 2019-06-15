@@ -5,3 +5,10 @@ I have used React along as TypeScript to build this repo
 
 ## Technologies Used
 ### React
+### TypeScript
+### Redux
+### Immer?
+### Ant Design
+### Formik
+### Yup
+
