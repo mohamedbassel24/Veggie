@@ -3,7 +3,6 @@ import { withFormik } from "formik";
 import { Form, Icon, Input, Button, Spin, Alert } from "antd";
 import * as yup from "yup";
 import Axios from "axios";
-import { async } from "q";
 
 const Signin = ({
   values,
