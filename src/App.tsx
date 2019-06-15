@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.css";
+
 import LandingPage from "./Components/LandingPage/LandingPage";
 import Login from "./Components/Login/Login";
 import { Route, Switch } from "react-router-dom";
