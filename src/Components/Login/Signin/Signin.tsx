@@ -1,8 +1,13 @@
 import React from "react";
-import { withFormik } from "formik";
+import { withFormik, FormikProps } from "formik";
 import { Form, Icon, Input, Button, Spin, Alert } from "antd";
 import * as yup from "yup";
 import Axios from "axios";
+import Password from "antd/lib/input/Password";
+interface formValues {
+  email: string;
+  password: string;
+}
 
 const Signin = ({
   values,
@@ -11,7 +16,7 @@ const Signin = ({
   isSubmitting,
   errors,
   touched
-}) => {
+}: FormikProps<formValues>) => {
   return isSubmitting === true ? (
     <Spin size="large" tip="Submitting...">
       <Form onSubmit={handleSubmit} style={{ textAlign: "left" }}>
@@ -98,11 +103,15 @@ export default withFormik({
       password: values.password,
       returnSecureToken: true
     };
+
     await Axios.post(
       "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDAXLmBDlEIbiyD2Gyb1U2OMCqpIpzPweE",
       authdata
     )
-      .then(res => resetForm())
+      .then(res => {
+        resetForm();
+        console.log(res);
+      })
       .catch(err => setErrors({ password: "Wrong Username or Password" }));
     setSubmitting(false);
   },

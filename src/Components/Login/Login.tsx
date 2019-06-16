@@ -5,7 +5,7 @@ import Signin from "./Signin/Signin";
 import Signup from "./Signup/Signup";
 const { TabPane } = Tabs;
 
-export default function Login(Props) {
+export default function Login(Props: any) {
   let tab: number =
     Props.location.state === undefined ? 1 : Props.location.state.tab;
   return (

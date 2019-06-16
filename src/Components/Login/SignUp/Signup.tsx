@@ -204,7 +204,7 @@ export default withFormik({
   },
   validationSchema: yup.object().shape({
     name: yup
-      .string("Your name has to be a string")
+      .string()
       .required("Please enter your name")
       .max(30),
     email: yup
@@ -219,7 +219,7 @@ export default withFormik({
       .object()
       .shape({
         _d: yup
-          .string("Please enter your Birth Date")
+          .string()
           .nullable(false)
           .required("Please enter your Birth Date")
       })
