@@ -3,7 +3,6 @@ import { withFormik, FormikProps } from "formik";
 import { Form, Icon, Input, Button, Spin, Alert } from "antd";
 import * as yup from "yup";
 import Axios from "axios";
-import Password from "antd/lib/input/Password";
 interface formValues {
   email: string;
   password: string;

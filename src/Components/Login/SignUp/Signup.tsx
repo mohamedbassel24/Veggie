@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { withFormik } from "formik";
+import { withFormik, FormikProps } from "formik";
 import {
   Form,
   Input,
@@ -12,6 +12,15 @@ import {
   Alert
 } from "antd";
 import * as yup from "yup";
+
+interface formValues {
+  email: string;
+  password: string;
+  name: string;
+  promos: boolean;
+  date: any;
+}
+
 const Signup = ({
   values,
   handleSubmit,
@@ -20,7 +29,7 @@ const Signup = ({
   errors,
   isSubmitting,
   setFieldValue
-}) => {
+}: FormikProps<formValues>) => {
   return isSubmitting === false ? (
     <Form
       onChange={handleChange}
@@ -195,7 +204,6 @@ export default withFormik({
       )
       .then(res => {
         resetForm();
-        setSubmitting(true);
       })
       .catch(err => {
         setErrors({ email: "Email is already taken." });
