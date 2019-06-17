@@ -52,7 +52,13 @@ const Signup = ({
       </Form.Item>
       <Form.Item>
         <Input
-          suffix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
+          suffix={
+            errors.email && touched.email ? (
+              <Icon type="exclamation-circle" style={{ color: "red" }} />
+            ) : (
+              <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
+            )
+          }
           placeholder="Enter your E-mail Address"
           value={values.email}
           onChange={handleChange}
@@ -128,7 +134,13 @@ const Signup = ({
         </Form.Item>
         <Form.Item>
           <Input
-            suffix={<Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />}
+            suffix={
+              errors.email && touched.email ? (
+                <Icon type="exclamation-circle" style={{ color: "red" }} />
+              ) : (
+                <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
+              )
+            }
             placeholder="Enter your E-mail Address"
             value={values.email}
             onChange={handleChange}
