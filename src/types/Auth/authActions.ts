@@ -23,7 +23,11 @@ export default setAuthToken;
 export const loginUser = (userData: {
   email: string;
   password: string;
-}) => async (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
+}) => async (
+  dispatch: Dispatch<AppActions>,
+  getState: () => AppState,
+  { getFirebase, getFirestore }
+) => {
   let x: boolean = false;
   console.log(userData);
   await Axios.post(
