@@ -3,7 +3,8 @@ import { SET_CURRENT_USER, AuthActionTypes } from "../types/Auth/authTypes";
 const initUser: Iuser = {
   name: "",
   birthDate: "",
-  email: ""
+  email: "",
+  UID: ""
 };
 const initState: Iauth = {
   isAuthenticated: false,

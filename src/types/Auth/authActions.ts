@@ -1,8 +1,13 @@
-import { AuthActionTypes, SET_CURRENT_PROFILE, Iauth } from "./authTypes";
+import {
+  AuthActionTypes,
+  SET_CURRENT_USER,
+  Iauth,
+  ISET_CURRENT_USER
+} from "./authTypes";
 import Axios from "axios";
 import { Dispatch, ActionCreator } from "redux";
 import jwt_decode from "jwt-decode";
-
+import firebase from "../../config/fbconfig";
 import axios from "axios";
 import { AppActions } from "../actions";
 import { AppState } from "../../reducers";
@@ -23,26 +28,33 @@ export default setAuthToken;
 export const loginUser = (userData: {
   email: string;
   password: string;
-}) => async (
-  dispatch: Dispatch<AppActions>,
-  getState: () => AppState,
-  { getFirebase, getFirestore }
-) => {
-  let x: boolean = false;
-  console.log(userData);
-  await Axios.post(
-    "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDAXLmBDlEIbiyD2Gyb1U2OMCqpIpzPweE",
-    userData
-  )
-    .then(res => {
-      x = true;
+}) => async (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
+  await firebase
+    .auth()
+    .signInWithEmailAndPassword(userData.email, userData.password)
+    .then(async res => {
+      console.log(res);
+      let uid = res.user ? res.user.uid : "";
+
+      dispatch(
+        await setCurrentUser({
+          type: SET_CURRENT_USER,
+          payload: {
+            isAuthenticated: true,
+            user: {
+              birthDate: "",
+              email: userData.email,
+              name: "",
+              UID: uid
+            }
+          }
+        })
+      );
     })
-    .catch(err => {
-      x = false;
-    });
-  return x;
+    .catch(err => {});
+  console.log("done");
 };
-export const setCurrentUser = (decoded: SET_CURRENT_PROFILE) => {
+export const setCurrentUser = (decoded: ISET_CURRENT_USER) => {
   return {
     type: decoded.type,
     payload: decoded.payload

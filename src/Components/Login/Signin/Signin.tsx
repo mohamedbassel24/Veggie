@@ -3,20 +3,24 @@ import { withFormik, FormikProps } from "formik";
 import { Form, Icon, Input, Button, Spin, Alert } from "antd";
 import * as yup from "yup";
 import Axios from "axios";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AppActions } from "../../../types/actions";
 import { bindActionCreators } from "redux";
 import { loginUser } from "../../../types/Auth/authActions";
-import { SET_CURRENT_USER } from "../../../types/Auth/authTypes";
+import { SET_CURRENT_USER, Iauth } from "../../../types/Auth/authTypes";
+import { AppState } from "../../../reducers";
 interface formValues {
   email: string;
   password: string;
 }
+interface LinkStateProps {
+  auth: Iauth;
+}
 interface LinkDispatchProps {
   login: (userData: { email: string; password: string }) => void;
 }
-type ownProps = LinkDispatchProps;
+type ownProps = LinkDispatchProps & LinkStateProps;
 const Signin = ({
   values,
   handleChange,
@@ -105,22 +109,22 @@ const Signin = ({
 
 const formikEnhancer = withFormik({
   enableReinitialize: true,
-  mapPropsToValues: (props: LinkDispatchProps) => ({
+  mapPropsToValues: (props: ownProps) => ({
     email: "",
     password: "",
-    login: props.login
+    login: props.login,
+    auth: props.auth
   }),
-  handleSubmit: async (
-    values,
-    { setSubmitting, resetForm, setErrors, props }
-  ) => {
+  handleSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
     const authdata = {
       email: values.email,
       password: values.password,
       returnSecureToken: true
     };
-
-    let x = values.login(authdata);
+    console.log(values.auth);
+    console.log("==============");
+    await values.login(authdata);
+    console.log(values.auth);
     setSubmitting(false);
   },
   validationSchema: yup.object().shape({
@@ -135,6 +139,9 @@ const formikEnhancer = withFormik({
   })
 })(Signin);
 
+const mapStateToProps = (state: AppState) => ({
+  auth: state.auth
+});
 const mapDispatchToProps = dispatch => {
   return {
     login: (userData: { email: string; password: string }) =>
@@ -142,6 +149,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(formikEnhancer);
