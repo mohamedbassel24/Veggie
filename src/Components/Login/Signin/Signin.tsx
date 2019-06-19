@@ -3,11 +3,20 @@ import { withFormik, FormikProps } from "formik";
 import { Form, Icon, Input, Button, Spin, Alert } from "antd";
 import * as yup from "yup";
 import Axios from "axios";
+import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { AppActions } from "../../../types/actions";
+import { bindActionCreators } from "redux";
+import { loginUser } from "../../../types/Auth/authActions";
+import { SET_CURRENT_USER } from "../../../types/Auth/authTypes";
 interface formValues {
   email: string;
   password: string;
 }
-
+interface LinkDispatchProps {
+  login: (userData: { email: string; password: string }) => void;
+}
+type ownProps = LinkDispatchProps;
 const Signin = ({
   values,
   handleChange,
@@ -94,24 +103,24 @@ const Signin = ({
   );
 };
 
-export default withFormik({
-  mapPropsToValues: () => ({ email: "", password: "" }),
-  handleSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+const formikEnhancer = withFormik({
+  enableReinitialize: true,
+  mapPropsToValues: (props: LinkDispatchProps) => ({
+    email: "",
+    password: "",
+    login: props.login
+  }),
+  handleSubmit: async (
+    values,
+    { setSubmitting, resetForm, setErrors, props }
+  ) => {
     const authdata = {
       email: values.email,
       password: values.password,
       returnSecureToken: true
     };
 
-    await Axios.post(
-      "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDAXLmBDlEIbiyD2Gyb1U2OMCqpIpzPweE",
-      authdata
-    )
-      .then(res => {
-        resetForm();
-        console.log(res);
-      })
-      .catch(err => setErrors({ password: "Wrong Username or Password" }));
+    let x = values.login(authdata);
     setSubmitting(false);
   },
   validationSchema: yup.object().shape({
@@ -125,3 +134,14 @@ export default withFormik({
       .required("Enter a password")
   })
 })(Signin);
+
+const mapDispatchToProps = dispatch => {
+  return {
+    login: (userData: { email: string; password: string }) =>
+      dispatch(loginUser(userData))
+  };
+};
+export default connect(
+  null,
+  mapDispatchToProps
+)(formikEnhancer);
