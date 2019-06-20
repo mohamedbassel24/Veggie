@@ -1,6 +1,6 @@
 import React from "react";
-import axios from "axios";
-import { withFormik, FormikProps } from "formik";
+
+import { Formik } from "formik";
 import {
   Form,
   Input,
@@ -12,6 +12,9 @@ import {
   Alert
 } from "antd";
 import * as yup from "yup";
+import moment from "moment";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../../types/Auth/authActions";
 
 interface formValues {
   email: string;
@@ -20,229 +23,251 @@ interface formValues {
   promos: boolean;
   date: any;
 }
+const SignUp: React.FC<{}> = () => {
+  const dispatch = useDispatch();
+  return (
+    <Formik
+      initialValues={{
+        email: "",
+        password: "",
+        name: "",
+        date: moment(),
+        promos: false
+      }}
+      onSubmit={async (values, { setSubmitting, setErrors, resetForm }) => {
+        setSubmitting(true);
+        const data = {
+          email: values.email,
+          password: values.password,
+          date: values.date,
+          promos: values.promos,
+          returnSecureToken: true
+        };
+        const { email, password } = data;
+        const result = await dispatch(loginUser({ email, password }));
+        console.log(result);
+        setSubmitting(false);
+      }}
+      validationSchema={yup.object().shape({
+        name: yup
+          .string()
+          .required("Please enter your name")
+          .max(30),
+        email: yup
+          .string()
+          .required("Please enter your Email")
+          .email("This field has to be an email"),
+        password: yup
+          .string()
+          .min(8, "Password Must be atleast 8 characters")
+          .required("Please enter your password"),
+        date: yup
+          .object()
+          .shape({
+            _d: yup
+              .string()
+              .nullable(false)
+              .required("Please enter your Birth Date")
+          })
+          .required("Please enter your Birth Date")
+      })}
+      render={({
+        errors,
+        touched,
+        isSubmitting,
+        handleSubmit,
+        values,
+        setFieldValue,
+        handleChange
+      }) =>
+        isSubmitting === true ? (
+          <Spin size="large" tip="Submitting...">
+            <Form
+              onChange={handleChange}
+              onSubmit={handleSubmit}
+              style={{ textAlign: "left" }}
+            >
+              <Form.Item>
+                <Input
+                  suffix={
+                    <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+                  }
+                  placeholder="Enter your Name"
+                  value={values.name}
+                  autoFocus={true}
+                  onChange={handleChange}
+                  type="text"
+                  name="name"
+                />
+                {errors.name && touched.name ? (
+                  <Alert message={errors.name} type="error" showIcon />
+                ) : null}
+              </Form.Item>
+              <Form.Item>
+                <Input
+                  suffix={
+                    errors.email && touched.email ? (
+                      <Icon
+                        type="exclamation-circle"
+                        style={{ color: "red" }}
+                      />
+                    ) : (
+                      <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
+                    )
+                  }
+                  placeholder="Enter your E-mail Address"
+                  value={values.email}
+                  onChange={handleChange}
+                  type="email"
+                  name="email"
+                />
+                {errors.email && touched.email ? (
+                  <Alert message={errors.email} type="error" showIcon />
+                ) : null}
+              </Form.Item>
 
-const Signup = ({
-  values,
-  handleSubmit,
-  handleChange,
-  touched,
-  errors,
-  isSubmitting,
-  setFieldValue
-}: FormikProps<formValues>) => {
-  return isSubmitting === false ? (
-    <Form
-      onChange={handleChange}
-      onSubmit={handleSubmit}
-      style={{ textAlign: "left" }}
-    >
-      <Form.Item>
-        <Input
-          suffix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-          placeholder="Enter your Name"
-          value={values.name}
-          autoFocus={true}
-          onChange={handleChange}
-          type="text"
-          name="name"
-        />
-        {errors.name && touched.name ? (
-          <Alert message={errors.name} type="error" showIcon />
-        ) : null}
-      </Form.Item>
-      <Form.Item>
-        <Input
-          suffix={
-            errors.email && touched.email ? (
-              <Icon type="exclamation-circle" style={{ color: "red" }} />
-            ) : (
-              <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
-            )
-          }
-          placeholder="Enter your E-mail Address"
-          value={values.email}
-          onChange={handleChange}
-          type="email"
-          name="email"
-        />
-        {errors.email && touched.email ? (
-          <Alert message={errors.email} type="error" showIcon />
-        ) : null}
-      </Form.Item>
-
-      <Form.Item>
-        <Input
-          suffix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
-          placeholder="Enter your Password"
-          value={values.password}
-          onChange={handleChange}
-          type="password"
-          name="password"
-        />
-        {errors.password && touched.password ? (
-          <Alert message={errors.password} type="error" showIcon />
-        ) : null}
-      </Form.Item>
-      <Form.Item>
-        <DatePicker
-          name="date"
-          value={values.date}
-          suffixIcon={
-            <Icon type="calendar" style={{ color: "rgba(0,0,0,.25)" }} />
-          }
-          placeholder="Your Birth Date"
-          format="DD/MM/YYYY"
-          onChange={(date, dateString) => {
-            return setFieldValue("date", date);
-          }}
-        />
-        {errors.date && touched.date ? (
-          <Alert message={errors.date} type="error" showIcon />
-        ) : null}
-      </Form.Item>
-      <Form.Item>
-        <Checkbox name="promos" onChange={handleChange}>
-          Subscribe to weekly newsletter
-        </Checkbox>
-      </Form.Item>
-      <Button
-        type="primary"
-        htmlType="submit"
-        disabled={isSubmitting}
-        size="large"
-      >
-        Signup
-      </Button>
-    </Form>
-  ) : (
-    <Spin size="large" tip="Submitting...">
-      <Form
-        onChange={handleChange}
-        onSubmit={handleSubmit}
-        style={{ textAlign: "left" }}
-      >
-        <Form.Item>
-          <Input
-            suffix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-            placeholder="Enter your Name"
-            value={values.name}
-            autoFocus={true}
+              <Form.Item>
+                <Input
+                  suffix={
+                    <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
+                  }
+                  placeholder="Enter your Password"
+                  value={values.password}
+                  onChange={handleChange}
+                  type="password"
+                  name="password"
+                />
+                {errors.password && touched.password ? (
+                  <Alert message={errors.password} type="error" showIcon />
+                ) : null}
+              </Form.Item>
+              <Form.Item>
+                <DatePicker
+                  name="date"
+                  value={values.date}
+                  suffixIcon={
+                    <Icon
+                      type="calendar"
+                      style={{ color: "rgba(0,0,0,.25)" }}
+                    />
+                  }
+                  placeholder="Your Birth Date"
+                  format="DD/MM/YYYY"
+                  onChange={(date, dateString) => {
+                    return setFieldValue("date", date);
+                  }}
+                />
+                {errors.date && touched.date ? (
+                  <Alert message={errors.date} type="error" showIcon />
+                ) : null}
+              </Form.Item>
+              <Form.Item>
+                <Checkbox name="promos" onChange={handleChange}>
+                  Subscribe to weekly newsletter
+                </Checkbox>
+              </Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={isSubmitting}
+                size="large"
+              >
+                Signup
+              </Button>
+            </Form>
+          </Spin>
+        ) : (
+          <Form
             onChange={handleChange}
-            type="text"
-            name="name"
-          />
-        </Form.Item>
-        <Form.Item>
-          <Input
-            suffix={
-              errors.email && touched.email ? (
-                <Icon type="exclamation-circle" style={{ color: "red" }} />
-              ) : (
-                <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
-              )
-            }
-            placeholder="Enter your E-mail Address"
-            value={values.email}
-            onChange={handleChange}
-            type="email"
-            name="email"
-          />
-        </Form.Item>
-
-        <Form.Item>
-          <Input
-            suffix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
-            placeholder="Enter your Password"
-            value={values.password}
-            onChange={handleChange}
-            type="password"
-            name="password"
-          />
-        </Form.Item>
-        <Form.Item>
-          <DatePicker
-            name="date"
-            value={values.date}
-            suffixIcon={
-              <Icon type="calendar" style={{ color: "rgba(0,0,0,.25)" }} />
-            }
-            placeholder="Your Birth Date"
-            onChange={(date, dateString) => {
-              return setFieldValue("date", date);
-            }}
-          />
-        </Form.Item>
-        <Form.Item>
-          <Checkbox
-            name="promos"
-            checked={values.promos}
-            onChange={handleChange}
+            onSubmit={handleSubmit}
+            style={{ textAlign: "left" }}
           >
-            Subscribe to weekly newsletter
-          </Checkbox>
-        </Form.Item>
+            <Form.Item>
+              <Input
+                suffix={
+                  <Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />
+                }
+                placeholder="Enter your Name"
+                value={values.name}
+                autoFocus={true}
+                onChange={handleChange}
+                type="text"
+                name="name"
+              />
+              {errors.name && touched.name ? (
+                <Alert message={errors.name} type="error" showIcon />
+              ) : null}
+            </Form.Item>
+            <Form.Item>
+              <Input
+                suffix={
+                  errors.email && touched.email ? (
+                    <Icon type="exclamation-circle" style={{ color: "red" }} />
+                  ) : (
+                    <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
+                  )
+                }
+                placeholder="Enter your E-mail Address"
+                value={values.email}
+                onChange={handleChange}
+                type="email"
+                name="email"
+              />
+              {errors.email && touched.email ? (
+                <Alert message={errors.email} type="error" showIcon />
+              ) : null}
+            </Form.Item>
 
-        <Button
-          type="primary"
-          htmlType="submit"
-          disabled={isSubmitting}
-          size="large"
-        >
-          Signup
-        </Button>
-      </Form>
-    </Spin>
+            <Form.Item>
+              <Input
+                suffix={
+                  <Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />
+                }
+                placeholder="Enter your Password"
+                value={values.password}
+                onChange={handleChange}
+                type="password"
+                name="password"
+              />
+              {errors.password && touched.password ? (
+                <Alert message={errors.password} type="error" showIcon />
+              ) : null}
+            </Form.Item>
+            <Form.Item>
+              <DatePicker
+                name="date"
+                value={values.date}
+                suffixIcon={
+                  <Icon type="calendar" style={{ color: "rgba(0,0,0,.25)" }} />
+                }
+                placeholder="Your Birth Date"
+                format="DD/MM/YYYY"
+                onChange={(date, dateString) => {
+                  return setFieldValue("date", date);
+                }}
+              />
+              {errors.date && touched.date ? (
+                <Alert message={errors.date} type="error" showIcon />
+              ) : null}
+            </Form.Item>
+            <Form.Item>
+              <Checkbox name="promos" onChange={handleChange}>
+                Subscribe to weekly newsletter
+              </Checkbox>
+            </Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={isSubmitting}
+              size="large"
+            >
+              Signup
+            </Button>
+          </Form>
+        )
+      }
+    />
   );
 };
 
-export default withFormik({
-  mapPropsToValues: () => ({
-    name: "",
-    email: "",
-    password: "",
-    date: null,
-    promos: false
-  }),
-  handleSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
-    const data = {
-      email: values.email,
-      password: values.password,
-      returnSecureToken: true
-    };
-    await axios
-      .post(
-        "https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyDAXLmBDlEIbiyD2Gyb1U2OMCqpIpzPweE",
-        data
-      )
-      .then(res => {
-        resetForm();
-      })
-      .catch(err => {
-        setErrors({ email: "Email is already taken." });
-      });
-    setSubmitting(false);
-  },
-  validationSchema: yup.object().shape({
-    name: yup
-      .string()
-      .required("Please enter your name")
-      .max(30),
-    email: yup
-      .string()
-      .required("Please enter your Email")
-      .email("This field has to be an email"),
-    password: yup
-      .string()
-      .min(8, "Password Must be atleast 8 characters")
-      .required("Please enter your password"),
-    date: yup
-      .object()
-      .shape({
-        _d: yup
-          .string()
-          .nullable(false)
-          .required("Please enter your Birth Date")
-      })
-      .required("Please enter your Birth Date")
-  })
-})(Signup);
+export default SignUp;
