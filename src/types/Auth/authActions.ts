@@ -10,6 +10,7 @@ import { Dispatch } from "redux";
 import firebase from "../../config/fbconfig";
 import { AppActions } from "../actions";
 import { AppState } from "../../reducers";
+import { Moment } from "moment";
 
 //Actions Create AKA AJAX,,Basically getting where the payload is and dispatching to the reducers
 export const loginUser = (userData: {
@@ -42,8 +43,8 @@ export const loginUser = (userData: {
     })
     .catch(err => {
       if (
-        err.code.includes("auth/wrong-password") ||
-        err.code.includes("auth/user-not-found")
+        err.code === "auth/wrong-password" ||
+        err.code === "auth/user-not-found"
       ) {
         dispatch(
           SetErrors({
@@ -52,6 +53,26 @@ export const loginUser = (userData: {
           })
         );
       }
+    });
+};
+export const signupUser = (userData: {
+  email: string;
+  password: string;
+  name: string;
+  promos: boolean;
+  date: Moment;
+  returnSecureToken: boolean;
+}) => async (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
+  await firebase
+    .auth()
+    .createUserWithEmailAndPassword(userData.email, userData.password)
+    .then(res => {
+      //Create collection
+      //dispatch(setCurrentUser,)
+    })
+    .catch(err => {
+      //Handles Errors
+      //Dispatch
     });
 };
 export const setCurrentUser = (decoded: ISET_CURRENT_USER) => {

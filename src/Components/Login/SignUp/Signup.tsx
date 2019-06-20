@@ -14,7 +14,7 @@ import {
 import * as yup from "yup";
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../../../types/Auth/authActions";
+import { signupUser } from "../../../types/Auth/authActions";
 
 interface formValues {
   email: string;
@@ -41,10 +41,10 @@ const SignUp: React.FC<{}> = () => {
           password: values.password,
           date: values.date,
           promos: values.promos,
-          returnSecureToken: true
+          returnSecureToken: true,
+          name: values.name
         };
-        const { email, password } = data;
-        const result = await dispatch(loginUser({ email, password }));
+        const result = await dispatch(signupUser(data));
         console.log(result);
         setSubmitting(false);
       }}
