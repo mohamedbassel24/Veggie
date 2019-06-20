@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../../../types/Auth/authActions";
 import { AppState } from "../../../reducers";
 
-const SignIn: React.FC<{}> = props => {
+const SignIn: React.FC<{}> = () => {
   const auth = useSelector((state: AppState) => state.auth);
   const dispatch = useDispatch();
 
