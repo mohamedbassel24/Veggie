@@ -29,30 +29,32 @@ export const loginUser = (userData: {
   email: string;
   password: string;
 }) => async (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
+  let result: Iauth | null = null;
   await firebase
     .auth()
     .signInWithEmailAndPassword(userData.email, userData.password)
     .then(async res => {
       console.log(res);
       let uid = res.user ? res.user.uid : "";
-
+      result = {
+        isAuthenticated: true,
+        user: {
+          birthDate: "",
+          email: userData.email,
+          name: "",
+          UID: uid
+        }
+      };
       dispatch(
         await setCurrentUser({
           type: SET_CURRENT_USER,
-          payload: {
-            isAuthenticated: true,
-            user: {
-              birthDate: "",
-              email: userData.email,
-              name: "",
-              UID: uid
-            }
-          }
+          payload: result
         })
       );
     })
     .catch(err => {});
   console.log("done");
+  return result;
 };
 export const setCurrentUser = (decoded: ISET_CURRENT_USER) => {
   return {
