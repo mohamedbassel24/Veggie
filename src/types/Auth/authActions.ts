@@ -2,21 +2,8 @@ import { SET_CURRENT_USER, Iauth, ISET_CURRENT_USER } from "./authTypes";
 import { Dispatch } from "redux";
 
 import firebase from "../../config/fbconfig";
-import axios from "axios";
 import { AppActions } from "../actions";
 import { AppState } from "../../reducers";
-
-const setAuthToken = token => {
-  if (token) {
-    // Apply to every request
-    axios.defaults.headers.common["Authorization"] = token;
-  } else {
-    // Delete auth header
-    delete axios.defaults.headers.common["Authorization"];
-  }
-};
-
-export default setAuthToken;
 
 //Actions Create AKA AJAX,,Basically getting where the payload is and dispatching to the reducers
 export const loginUser = (userData: {
