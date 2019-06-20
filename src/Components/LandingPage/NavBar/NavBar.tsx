@@ -5,16 +5,12 @@ import { Button } from "antd";
 
 import { Layout, Menu, Icon } from "antd";
 import { AppState } from "../../../reducers";
-import { connect } from "react-redux";
-import { Iauth } from "../../../types/Auth/authTypes";
+import { useSelector } from "react-redux";
 
 const { Header } = Layout;
-interface LinkStateProps {
-  auth: Iauth;
-}
-type Props = LinkStateProps;
 
-const NavBar: React.FC<Props> = props => {
+const NavBar: React.FC<{}> = () => {
+  const auth = useSelector((state: AppState) => state.auth);
   return (
     <Header>
       <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
@@ -25,14 +21,19 @@ const NavBar: React.FC<Props> = props => {
         <Menu.Item key="2">
           <Link to={{ pathname: "/" }}>Home</Link>
         </Menu.Item>
-        {props.auth.isAuthenticated === false ? (
+        {auth.isAuthenticated === true ? (
+          <Menu.Item key="7" style={{ float: "right", textAlign: "center" }}>
+            <Button>Logout</Button>
+          </Menu.Item>
+        ) : null}
+        {auth.isAuthenticated === false ? (
           <Menu.Item key="7" style={{ float: "right", textAlign: "center" }}>
             <Link to={{ pathname: "/login", state: { tab: 2 } }}>
               <Button>Sign up</Button>
             </Link>
           </Menu.Item>
         ) : null}
-        {props.auth.isAuthenticated === false ? (
+        {auth.isAuthenticated === false ? (
           <Menu.Item key="9" style={{ float: "right", textAlign: "center" }}>
             <Link to={{ pathname: "/login", state: { tab: 1 } }}>
               <Button type="ghost" style={{ color: "white" }}>
@@ -58,7 +59,5 @@ const NavBar: React.FC<Props> = props => {
     </Header>
   );
 };
-const mapStateToProps = (state: AppState) => ({
-  auth: state.auth
-});
-export default connect(mapStateToProps)(NavBar);
+
+export default NavBar;
