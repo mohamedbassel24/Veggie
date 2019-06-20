@@ -1,4 +1,4 @@
-import { Iauth, Iuser } from "../types/Auth/authTypes";
+import { Iauth, Iuser, SET_ERRORS } from "../types/Auth/authTypes";
 import { SET_CURRENT_USER, AuthActionTypes } from "../types/Auth/authTypes";
 const initUser: Iuser = {
   name: "",
@@ -8,7 +8,8 @@ const initUser: Iuser = {
 };
 const initState: Iauth = {
   isAuthenticated: false,
-  user: initUser
+  user: initUser,
+  errorMessage: null
 };
 export default (state = initState, action: AuthActionTypes): Iauth => {
   switch (action.type) {
@@ -18,7 +19,15 @@ export default (state = initState, action: AuthActionTypes): Iauth => {
       return {
         ...state,
         isAuthenticated: action.payload.isAuthenticated,
-        user: action.payload.user
+        user: action.payload.user,
+        errorMessage: null
+      };
+    case SET_ERRORS:
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: initUser,
+        errorMessage: action.payload
       };
   }
 };

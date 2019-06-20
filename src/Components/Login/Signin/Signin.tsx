@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik } from "formik";
 import { Form, Icon, Input, Button, Spin, Alert } from "antd";
 import * as yup from "yup";
@@ -10,7 +10,7 @@ import { AppState } from "../../../reducers";
 const SignIn: React.FC<{}> = () => {
   const auth = useSelector((state: AppState) => state.auth);
   const dispatch = useDispatch();
-
+  const [submit, isSubmitted] = useState(false);
   return (
     <Formik
       initialValues={{
@@ -34,13 +34,10 @@ const SignIn: React.FC<{}> = () => {
           returnSecureToken: true
         };
 
-        console.log(auth);
-        console.log("==============");
         //const result = await props.login(authdata);
-        const result = await dispatch(loginUser(authdata));
+        await dispatch(loginUser(authdata));
+        isSubmitted(true);
         setSubmitting(false);
-
-        console.log(result);
       }}
       render={({
         errors,
@@ -118,8 +115,11 @@ const SignIn: React.FC<{}> = () => {
                 type="password"
                 name="password"
               />
-              {errors.password && touched.password ? (
-                <Alert message={errors.password} type="error" showIcon />
+              {auth.errorMessage &&
+              touched.password &&
+              auth.errorMessage.includes("Password") &&
+              submit ? (
+                <Alert message={auth.errorMessage} type="error" showIcon />
               ) : null}
             </Form.Item>
             <Form.Item>
@@ -128,9 +128,13 @@ const SignIn: React.FC<{}> = () => {
                 htmlType="submit"
                 disabled={isSubmitting}
                 size="large"
+                style={{ marginBottom: "5px" }}
               >
                 Log in
               </Button>
+              {!auth.errorMessage && submit ? (
+                <Alert message="Signed In!" type="success" showIcon />
+              ) : null}
             </Form.Item>
           </Form>
         )

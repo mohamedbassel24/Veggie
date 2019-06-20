@@ -1,4 +1,10 @@
-import { SET_CURRENT_USER, Iauth, ISET_CURRENT_USER } from "./authTypes";
+import {
+  SET_CURRENT_USER,
+  Iauth,
+  ISET_CURRENT_USER,
+  ISET_ERRORS,
+  SET_ERRORS
+} from "./authTypes";
 import { Dispatch } from "redux";
 
 import firebase from "../../config/fbconfig";
@@ -24,7 +30,8 @@ export const loginUser = (userData: {
           email: userData.email,
           name: "",
           UID: uid
-        }
+        },
+        errorMessage: null
       };
       dispatch(
         await setCurrentUser({
@@ -33,11 +40,27 @@ export const loginUser = (userData: {
         })
       );
     })
-    .catch(err => {});
-  console.log("done");
-  return result;
+    .catch(err => {
+      if (
+        err.code.includes("auth/wrong-password") ||
+        err.code.includes("auth/user-not-found")
+      ) {
+        dispatch(
+          SetErrors({
+            type: SET_ERRORS,
+            payload: "Invalid E-mail or Password"
+          })
+        );
+      }
+    });
 };
 export const setCurrentUser = (decoded: ISET_CURRENT_USER) => {
+  return {
+    type: decoded.type,
+    payload: decoded.payload
+  };
+};
+export const SetErrors = (decoded: ISET_ERRORS) => {
   return {
     type: decoded.type,
     payload: decoded.payload
