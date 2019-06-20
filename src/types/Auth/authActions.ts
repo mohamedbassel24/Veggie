@@ -1,12 +1,6 @@
-import {
-  AuthActionTypes,
-  SET_CURRENT_USER,
-  Iauth,
-  ISET_CURRENT_USER
-} from "./authTypes";
-import Axios from "axios";
-import { Dispatch, ActionCreator } from "redux";
-import jwt_decode from "jwt-decode";
+import { SET_CURRENT_USER, Iauth, ISET_CURRENT_USER } from "./authTypes";
+import { Dispatch } from "redux";
+
 import firebase from "../../config/fbconfig";
 import axios from "axios";
 import { AppActions } from "../actions";

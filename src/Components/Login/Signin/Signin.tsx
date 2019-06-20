@@ -1,28 +1,21 @@
 import React from "react";
-import { withFormik, FormikProps, Formik } from "formik";
+import { Formik } from "formik";
 import { Form, Icon, Input, Button, Spin, Alert } from "antd";
 import * as yup from "yup";
-import Axios from "axios";
-import { connect, useSelector } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { AppActions } from "../../../types/actions";
-import { bindActionCreators } from "redux";
+
+import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../../../types/Auth/authActions";
-import { SET_CURRENT_USER, Iauth } from "../../../types/Auth/authTypes";
 import { AppState } from "../../../reducers";
-import { func } from "prop-types";
+
 interface formValues {
   email: string;
   password: string;
 }
-interface LinkStateProps {
-  auth: Iauth;
-}
-interface LinkDispatchProps {
-  login: (userData: { email: string; password: string }) => void;
-}
-type ownProps = LinkDispatchProps & LinkStateProps;
-const SignIn: React.FC<ownProps> = props => {
+
+const SignIn: React.FC<{}> = props => {
+  const auth = useSelector((state: AppState) => state.auth);
+  const dispatch = useDispatch();
+
   return (
     <Formik
       initialValues={{
@@ -46,9 +39,10 @@ const SignIn: React.FC<ownProps> = props => {
           returnSecureToken: true
         };
 
-        console.log(props.auth);
+        console.log(auth);
         console.log("==============");
-        const result = await props.login(authdata);
+        //const result = await props.login(authdata);
+        const result = await dispatch(loginUser(authdata));
         setSubmitting(false);
 
         console.log(result);
@@ -282,16 +276,4 @@ const formikEnhancer = withFormik({
   );
 }; */
 
-const mapStateToProps = (state: AppState) => ({
-  auth: state.auth
-});
-const mapDispatchToProps = dispatch => {
-  return {
-    login: (userData: { email: string; password: string }) =>
-      dispatch(loginUser(userData))
-  };
-};
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SignIn);
+export default SignIn;

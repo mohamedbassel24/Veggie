@@ -2,7 +2,6 @@ import { createStore, applyMiddleware, compose } from "redux";
 import thunk, { ThunkMiddleware } from "redux-thunk";
 import { rootReducer, AppState } from "./reducers/index";
 import { AppActions } from "./types/actions";
-import firebase from "./config/fbconfig";
 
 const middleware = [thunk as ThunkMiddleware<AppState, AppActions>];
 const initState = {};
