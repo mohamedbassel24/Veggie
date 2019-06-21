@@ -107,6 +107,21 @@ export const signupUser = (userData: {
       );
     });
 };
+export const signOut = () => async (
+  dispatch: Dispatch<AppActions>,
+  getState: () => AppState
+) => {
+  await dispatch(
+    setCurrentUser({
+      type: SET_CURRENT_USER,
+      payload: {
+        errorMessage: null,
+        isAuthenticated: false,
+        user: { UID: "", birthDate: "", email: "", name: "" }
+      }
+    })
+  );
+};
 export const setCurrentUser = (decoded: ISET_CURRENT_USER) => {
   return {
     type: decoded.type,

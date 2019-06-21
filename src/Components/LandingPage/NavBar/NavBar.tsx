@@ -5,12 +5,14 @@ import { Button } from "antd";
 
 import { Layout, Menu, Icon } from "antd";
 import { AppState } from "../../../reducers";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { signOut } from "../../../types/Auth/authActions";
 
 const { Header } = Layout;
 
 const NavBar: React.FC<{}> = () => {
   const auth = useSelector((state: AppState) => state.auth);
+  const dispatch = useDispatch();
   return (
     <Header>
       <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
@@ -23,7 +25,7 @@ const NavBar: React.FC<{}> = () => {
         </Menu.Item>
         {auth.isAuthenticated === true ? (
           <Menu.Item key="7" style={{ float: "right", textAlign: "center" }}>
-            <Button>Logout</Button>
+            <Button onClick={() => dispatch(signOut())}>Logout</Button>
           </Menu.Item>
         ) : null}
         {auth.isAuthenticated === false ? (
