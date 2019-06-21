@@ -66,13 +66,45 @@ export const signupUser = (userData: {
   await firebase
     .auth()
     .createUserWithEmailAndPassword(userData.email, userData.password)
-    .then(res => {
+    .then(async res => {
       //Create collection
-      //dispatch(setCurrentUser,)
+      console.log(res);
+      let uid = res.user ? res.user.uid : "";
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .set({
+          name: userData.name,
+          email: userData.email,
+          birthdate: userData.date.format("DD/MM/YYYY"),
+          promos: userData.promos
+        });
+      let user: Iauth = {
+        isAuthenticated: true,
+        user: {
+          birthDate: "",
+          email: userData.email,
+          name: userData.name,
+          UID: uid
+        },
+        errorMessage: null
+      };
+
+      dispatch(
+        setCurrentUser({
+          type: SET_CURRENT_USER,
+          payload: user
+        })
+      );
     })
     .catch(err => {
-      //Handles Errors
-      //Dispatch
+      dispatch(
+        SetErrors({
+          type: SET_ERRORS,
+          payload: "User already Exists."
+        })
+      );
     });
 };
 export const setCurrentUser = (decoded: ISET_CURRENT_USER) => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Formik } from "formik";
 import {
@@ -13,8 +13,9 @@ import {
 } from "antd";
 import * as yup from "yup";
 import moment from "moment";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { signupUser } from "../../../types/Auth/authActions";
+import { AppState } from "../../../reducers";
 
 interface formValues {
   email: string;
@@ -24,6 +25,9 @@ interface formValues {
   date: any;
 }
 const SignUp: React.FC<{}> = () => {
+  const [submit, isSubmitted] = useState(false);
+  const auth = useSelector((state: AppState) => state.auth);
+
   const dispatch = useDispatch();
   return (
     <Formik
@@ -44,8 +48,13 @@ const SignUp: React.FC<{}> = () => {
           returnSecureToken: true,
           name: values.name
         };
-        const result = await dispatch(signupUser(data));
-        console.log(result);
+        await dispatch(signupUser(data));
+
+        isSubmitted(true);
+        if (!auth.errorMessage) {
+          resetForm();
+        }
+
         setSubmitting(false);
       }}
       validationSchema={yup.object().shape({
@@ -254,6 +263,12 @@ const SignUp: React.FC<{}> = () => {
               <Checkbox name="promos" onChange={handleChange}>
                 Subscribe to weekly newsletter
               </Checkbox>
+              {auth.errorMessage && touched.password && submit ? (
+                <Alert message={auth.errorMessage} type="error" showIcon />
+              ) : null}
+              {!auth.errorMessage && submit ? (
+                <Alert message="Signed Up!" type="success" showIcon />
+              ) : null}
             </Form.Item>
             <Button
               type="primary"
