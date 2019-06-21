@@ -6,8 +6,8 @@ import Signup from "./Signup/Signup";
 const { TabPane } = Tabs;
 
 export default function Login(Props: any) {
-  let tab: number =
-    Props.location.state === undefined ? 1 : Props.location.state.tab;
+  let tab: number = Props.location.state ? Props.location.state.tab : 1;
+
   return (
     <div className="bg">
       <NavBar />
