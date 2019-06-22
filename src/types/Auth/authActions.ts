@@ -24,6 +24,8 @@ export const loginUser = (userData: {
     .then(async res => {
       console.log(res);
       let uid = res.user ? res.user.uid : "";
+      localStorage.setItem("user", uid);
+
       result = {
         isAuthenticated: true,
         user: {
@@ -70,6 +72,7 @@ export const signupUser = (userData: {
       //Create collection
       console.log(res);
       let uid = res.user ? res.user.uid : "";
+      localStorage.setItem("user", uid);
       await firebase
         .firestore()
         .collection("users")
@@ -111,6 +114,7 @@ export const signOut = () => async (
   dispatch: Dispatch<AppActions>,
   getState: () => AppState
 ) => {
+  localStorage.removeItem("user");
   await dispatch(
     setCurrentUser({
       type: SET_CURRENT_USER,
