@@ -1,15 +1,10 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk, { ThunkMiddleware } from "redux-thunk";
-import { rootReducer, AppState } from "./reducers/index";
-import { AppActions } from "./types/actions";
+import rootReducer from "./reducers/index";
 
-const middleware = [thunk as ThunkMiddleware<AppState, AppActions>];
+const middleware = [thunk];
 const initState = {};
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION__: any;
-  }
-}
+
 export const store = createStore(
   rootReducer,
   initState,

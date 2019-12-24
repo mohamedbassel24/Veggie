@@ -3,20 +3,24 @@
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es6",
+      "dom"
+    ],
     "sourceMap": true,
+    "checkJs": false,
     "allowJs": true,
     "jsx": "preserve",
     "moduleResolution": "node",
     "rootDir": "src",
     "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
+    "noImplicitThis": false,
+    "noImplicitAny": false,
     "strictNullChecks": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -29,8 +33,13 @@
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "src/Components/MainPage/MainPage.ts"
   ],
-  "types": ["typePatches"],
-  "include": ["src"]
+  "types": [
+    "typePatches"
+  ],
+  "include": [
+    "src"
+  ]
 }

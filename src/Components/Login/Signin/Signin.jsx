@@ -5,31 +5,28 @@ import * as yup from "yup";
 
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../../../types/Auth/authActions";
-import { AppState } from "../../../reducers";
 
-const SignIn: React.FC<{}> = () => {
-  const auth = useSelector((state: AppState) => state.auth);
+const SignIn = () => {
+  const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const [submit, isSubmitted] = useState(false);
   return (
     <Formik
       initialValues={{
-        email: "",
+        username: "",
         password: ""
       }}
       validationSchema={yup.object().shape({
-        email: yup
-          .string()
-          .required("Enter an Email")
-          .email("This field has to be an email"),
-        password: yup
-          .string()
-          .min(8, "Password Must be atleast 8 characters")
-          .required("Enter a password")
+        username: yup.string().required("Enter Your Username"),
+
+        password: yup.string().required("Enter a password")
       })}
-      onSubmit={async (values, { setSubmitting, resetForm, setErrors }) => {
+      onSubmit={async (values, { setSubmitting }) => {
+        setSubmitting(true);
+
+        console.log("xd");
         const authdata = {
-          email: values.email,
+          username: values.username,
           password: values.password,
           returnSecureToken: true
         };
@@ -49,17 +46,20 @@ const SignIn: React.FC<{}> = () => {
       }) =>
         isSubmitting === true ? (
           <Spin size="large" tip="Submitting...">
-            <Form onSubmit={handleSubmit} style={{ textAlign: "left" }}>
+            <Form
+              onSubmit={handleSubmit}
+              onChange={handleChange}
+              style={{ textAlign: "left" }}
+            >
               <Form.Item>
                 <Input
                   suffix={
                     <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
                   }
-                  placeholder="Enter your E-mail Address"
-                  value={values.email}
+                  placeholder="Enter your Username"
+                  value={values.username}
                   onChange={handleChange}
-                  type="email"
-                  name="email"
+                  name="username"
                 />
               </Form.Item>
               <Form.Item>
@@ -74,34 +74,36 @@ const SignIn: React.FC<{}> = () => {
                   name="password"
                 />
               </Form.Item>
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  disabled={isSubmitting}
-                  size="large"
-                >
-                  Log in
-                </Button>
-              </Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={isSubmitting}
+                size="large"
+              >
+                Log in
+              </Button>
             </Form>
           </Spin>
         ) : (
-          <Form onSubmit={handleSubmit} style={{ textAlign: "left" }}>
+          <Form
+            onSubmit={handleSubmit}
+            onChange={handleChange}
+            style={{ textAlign: "left" }}
+          >
             <Form.Item>
               <Input
                 suffix={
                   <Icon type="mail" style={{ color: "rgba(0,0,0,.25)" }} />
                 }
-                placeholder="Enter your E-mail Address"
-                value={values.email}
+                placeholder="Enter your Username"
+                value={values.username}
                 autoFocus={true}
                 onChange={handleChange}
-                type="email"
-                name="email"
+                type="text"
+                name="username"
               />
-              {errors.email && touched.email ? (
-                <Alert message={errors.email} type="error" showIcon />
+              {errors.username && touched.username ? (
+                <Alert message={errors.username} type="error" showIcon />
               ) : null}
             </Form.Item>
             <Form.Item>
@@ -122,20 +124,18 @@ const SignIn: React.FC<{}> = () => {
                 <Alert message={auth.errorMessage} type="error" showIcon />
               ) : null}
             </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                disabled={isSubmitting}
-                size="large"
-                style={{ marginBottom: "5px" }}
-              >
-                Log in
-              </Button>
-              {!auth.errorMessage && submit ? (
-                <Alert message="Signed In!" type="success" showIcon />
-              ) : null}
-            </Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={isSubmitting}
+              size="large"
+              style={{ marginBottom: "5px" }}
+            >
+              Log in
+            </Button>
+            {!auth.errorMessage && submit ? (
+              <Alert message="Signed In!" type="success" showIcon />
+            ) : null}
           </Form>
         )
       }

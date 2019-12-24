@@ -4,28 +4,37 @@ import { Link } from "react-router-dom";
 import { Button } from "antd";
 
 import { Layout, Menu, Icon } from "antd";
-import { AppState } from "../../../reducers";
+
 import { useSelector, useDispatch } from "react-redux";
 import { signOut } from "../../../types/Auth/authActions";
 
 const { Header } = Layout;
 
-const NavBar: React.FC<{}> = () => {
-  const auth = useSelector((state: AppState) => state.auth);
+const NavBar = props => {
+  const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
   return (
     <Header>
       <Menu theme="dark" mode="horizontal" style={{ lineHeight: "64px" }}>
         <Menu.Item key="1" disabled>
           <Icon type="dingding" theme="outlined" style={{ fontSize: "28px" }} />
-          Veggie
+          Consultation
         </Menu.Item>
         <Menu.Item key="2">
           <Link to={{ pathname: "/" }}>Home</Link>
         </Menu.Item>
+        <Menu.Item key="4">
+          <Link to={{ pathname: "/events" }}>Events</Link>
+        </Menu.Item>
         {auth.isAuthenticated === true ? (
           <Menu.Item key="7" style={{ float: "right", textAlign: "center" }}>
-            <Button onClick={() => dispatch(signOut())}>Logout</Button>
+            <Button
+              onClick={() => {
+                dispatch(signOut());
+              }}
+            >
+              Logout
+            </Button>
           </Menu.Item>
         ) : null}
         {auth.isAuthenticated === false ? (
@@ -44,6 +53,9 @@ const NavBar: React.FC<{}> = () => {
             </Link>
           </Menu.Item>
         ) : null}
+        <Menu.Item key="10" style={{ float: "right", textAlign: "center" }}>
+          <Link to={{ pathname: "/contact" }}>Contact Us</Link>
+        </Menu.Item>
         <Menu.Item key="6" style={{ float: "right", textAlign: "center" }}>
           <Icon
             type="ant-design"

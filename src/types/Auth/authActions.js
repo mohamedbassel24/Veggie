@@ -6,33 +6,33 @@ import {
   SET_ERRORS
 } from "./authTypes";
 import { Dispatch } from "redux";
-
-import firebase from "../../config/fbconfig";
-import { AppActions } from "../actions";
-import { AppState } from "../../reducers";
-import { Moment } from "moment";
+import axios from "axios";
 
 //Actions Create AKA AJAX,,Basically getting where the payload is and dispatching to the reducers
-export const loginUser = (userData: {
-  email: string;
-  password: string;
-}) => async (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
-  let result: Iauth | null = null;
-  await firebase
-    .auth()
-    .signInWithEmailAndPassword(userData.email, userData.password)
+export const loginUser = userData => async dispatch => {
+  let result = null;
+
+  await axios
+    .post("http://localhost:6001/api/Users/Login", {
+      Username: userData.username,
+      Password: userData.password
+    })
     .then(async res => {
       console.log(res);
-      let uid = res.user ? res.user.uid : "";
-      localStorage.setItem("user", uid);
+      let username = res.data.Username ? res.data.Username : "";
+      localStorage.setItem("user", username);
 
       result = {
         isAuthenticated: true,
         user: {
-          birthDate: "",
-          email: userData.email,
-          name: "",
-          UID: uid
+          firstname: res.data.Username,
+          birthDate: res.data.BirthDate,
+          email: res.data.Email,
+          username: res.data.Username,
+          lastname: res.data.LastName,
+          Gender: res.data.Gender,
+          Address: res.data.Address,
+          Priv: res.data.Priv
         },
         errorMessage: null
       };
@@ -44,10 +44,7 @@ export const loginUser = (userData: {
       );
     })
     .catch(err => {
-      if (
-        err.code === "auth/wrong-password" ||
-        err.code === "auth/user-not-found"
-      ) {
+      if (err.ReturnedMsg === "Wrong User Name or password") {
         dispatch(
           SetErrors({
             type: SET_ERRORS,
@@ -57,33 +54,26 @@ export const loginUser = (userData: {
       }
     });
 };
-export const signupUser = (userData: {
-  email: string;
-  password: string;
-  name: string;
-  promos: boolean;
-  date: Moment;
-  returnSecureToken: boolean;
-}) => async (dispatch: Dispatch<AppActions>, getState: () => AppState) => {
-  await firebase
-    .auth()
-    .createUserWithEmailAndPassword(userData.email, userData.password)
+export const signupUser = userData => async dispatch => {
+  await axios
+    .post("http://localhost:6001/api/Users/Register", {
+      Username: userData.username,
+      Password: userData.password,
+      FirstName: userData.firstname,
+      LastName: userData.lastname,
+      BirthDate: userData.date,
+      Gender: userData.gender,
+      Address: userData.address,
+      Email: userData.email,
+      Priv: 3
+    })
     .then(async res => {
       //Create collection
       console.log(res);
       let uid = res.user ? res.user.uid : "";
       localStorage.setItem("user", uid);
-      await firebase
-        .firestore()
-        .collection("users")
-        .doc(uid)
-        .set({
-          name: userData.name,
-          email: userData.email,
-          birthdate: userData.date.format("DD/MM/YYYY"),
-          promos: userData.promos
-        });
-      let user: Iauth = {
+
+      let user = {
         isAuthenticated: true,
         user: {
           birthDate: "",
@@ -110,29 +100,36 @@ export const signupUser = (userData: {
       );
     });
 };
-export const signOut = () => async (
-  dispatch: Dispatch<AppActions>,
-  getState: () => AppState
-) => {
+export const signOut = () => async dispatch => {
   localStorage.removeItem("user");
+
   await dispatch(
     setCurrentUser({
       type: SET_CURRENT_USER,
       payload: {
         errorMessage: null,
         isAuthenticated: false,
-        user: { UID: "", birthDate: "", email: "", name: "" }
+        user: {
+          firstname: "",
+          birthDate: "",
+          email: "",
+          username: "",
+          lastname: "",
+          Gender: "",
+          Address: "",
+          Priv: ""
+        }
       }
     })
   );
 };
-export const setCurrentUser = (decoded: ISET_CURRENT_USER) => {
+export const setCurrentUser = decoded => {
   return {
     type: decoded.type,
     payload: decoded.payload
   };
 };
-export const SetErrors = (decoded: ISET_ERRORS) => {
+export const SetErrors = decoded => {
   return {
     type: decoded.type,
     payload: decoded.payload

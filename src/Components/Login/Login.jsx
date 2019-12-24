@@ -5,9 +5,8 @@ import Signin from "./Signin/Signin";
 import Signup from "./Signup/Signup";
 const { TabPane } = Tabs;
 
-export default function Login(Props: any) {
-  let tab: number = Props.location.state ? Props.location.state.tab : 1;
-
+export default function Login(Props) {
+  let tab = Props.location.state ? Props.location.state.tab : 1;
   return (
     <div className="bg">
       <NavBar />
@@ -23,9 +22,6 @@ export default function Login(Props: any) {
           </Tabs>
         </Card>
       </Layout.Content>
-      <Layout.Footer style={{ textAlign: "center" }} className="footer">
-        Veggie.io ©2019 Created by Ahmed Khalifa
-      </Layout.Footer>
     </div>
   );
 }

@@ -1,3 +1,3 @@
 import { AuthActionTypes } from "./Auth/authTypes";
 
-export type AppActions = AuthActionTypes;
+//export type AppActions = AuthActionTypes;
