@@ -99,9 +99,26 @@ export default function LandingPage() {
     },
     onSubmit: values => {
       axios
-        .post("http://localhost:6001/api/Halls/Create", {
+        .post("http://localhost:6001/api/Hall/Create", {
           SeatsCount: values.seatcount,
           HallId: Math.random() * 100000000
+        })
+        .then(res => {
+          message.success("Hall Added");
+        })
+        .catch(err => message.error("Error"));
+    }
+  });
+  const edithall = useFormik({
+    initialValues: {
+      seatcount: "",
+      hallid: ""
+    },
+    onSubmit: values => {
+      axios
+        .post("http://localhost:6001/api/Hall/Update", {
+          SeatsCount: values.seatcount,
+          HallId: values.hallid
         })
         .then(res => {
           message.success("Hall Added");
@@ -264,7 +281,7 @@ export default function LandingPage() {
                     onChange={formik3.handleChange}
                     value={formik3.values.Description}
                   />
-                  <Input
+                  <input
                     id="file"
                     name="file"
                     type="file"
@@ -279,7 +296,7 @@ export default function LandingPage() {
                   <Input
                     placeholder="Enter Hall ID"
                     name="HallId"
-                    type="text"
+                    type="number"
                     id="username"
                     style={{
                       display: "inline-block",
@@ -309,7 +326,7 @@ export default function LandingPage() {
                   <Input
                     placeholder="Seat Count"
                     name="seatcount"
-                    type="text"
+                    type="number"
                     id="seatcount"
                     style={{ display: "inline-block", width: "70%" }}
                     onChange={createhall.handleChange}
@@ -326,6 +343,47 @@ export default function LandingPage() {
                     }}
                   >
                     Create Hall
+                  </Button>
+                </Form>
+                <Divider orientation="left">Edit Hall</Divider>
+                <Form onSubmit={edithall.handleSubmit}>
+                  <Input
+                    placeholder="Hall ID"
+                    name="hallid"
+                    type="number"
+                    id="hallid"
+                    style={{
+                      display: "inline-block",
+                      width: "30%",
+                      margin: "5px"
+                    }}
+                    onChange={edithall.handleChange}
+                    value={edithall.values.seatcount}
+                  />
+                  <Input
+                    placeholder="Seat Count"
+                    name="seatcount"
+                    type="number"
+                    id="seatcount"
+                    style={{
+                      display: "inline-block",
+                      width: "30%",
+                      margin: "5px"
+                    }}
+                    onChange={edithall.handleChange}
+                    value={edithall.values.seatcount}
+                  />
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    size="medium"
+                    style={{
+                      marginBottom: "5px",
+                      marginLeft: "7px",
+                      display: "inline"
+                    }}
+                  >
+                    Edit Hall
                   </Button>
                 </Form>
               </div>
