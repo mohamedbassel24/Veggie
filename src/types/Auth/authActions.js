@@ -44,14 +44,12 @@ export const loginUser = userData => async dispatch => {
       );
     })
     .catch(err => {
-      if (err.ReturnedMsg === "Wrong User Name or password") {
-        dispatch(
-          SetErrors({
-            type: SET_ERRORS,
-            payload: "Invalid E-mail or Password"
-          })
-        );
-      }
+      dispatch(
+        SetErrors({
+          type: SET_ERRORS,
+          payload: "Invalid E-mail or Password"
+        })
+      );
     });
 };
 export const signupUser = userData => async dispatch => {
