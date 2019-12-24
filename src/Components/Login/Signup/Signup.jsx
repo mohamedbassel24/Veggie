@@ -37,6 +37,7 @@ const SignUp = () => {
       }}
       onSubmit={async (values, { setSubmitting, setErrors, resetForm }) => {
         setSubmitting(true);
+
         const data = {
           username: values.username,
           email: values.email,

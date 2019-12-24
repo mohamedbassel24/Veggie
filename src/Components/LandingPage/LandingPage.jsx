@@ -126,6 +126,40 @@ export default function LandingPage() {
         .catch(err => message.error("Error"));
     }
   });
+  const editdetails = useFormik({
+    initialValues: {
+      Password: "",
+      Address: ""
+    },
+    validationSchema: yup.object().shape({
+      password: yup
+        .string()
+        .min(8, "Password Must be atleast 8 characters")
+        .required("Enter a New Password"),
+      Address: yup
+        .string()
+        .min(8, "Too Short!")
+        .max(80, "Too Long!")
+        .required("Enter a new Address")
+    }),
+    onSubmit: values => {
+      axios
+        .post("http://localhost:6001/api/Users/Update", {
+          Username: localStorage.getItem("user"),
+          Password: values.Password,
+          Address: values.Address,
+          FirstName: auth.user.firstname,
+          LastName: auth.user.lastname,
+          Email: auth.user.email,
+          Gender: auth.user.Gender,
+          Birthdate: auth.user.birthDate
+        })
+        .then(res => {
+          message.success(res.data.ReturnMsg);
+        })
+        .catch(err => message.error(err.data.ReturnedMsg));
+    }
+  });
   return (
     <Layout>
       <NavBar />
@@ -203,9 +237,9 @@ export default function LandingPage() {
                     value={formik2.values.username}
                   />
                   <Select
-                    defaultValue="1"
+                    defaultValue="2"
                     style={{
-                      width: 90,
+                      width: 110,
                       marginLeft: "5px",
                       marginRight: "5px",
                       display: "inline-block"
@@ -214,12 +248,11 @@ export default function LandingPage() {
                     onChange={value => formik2.setFieldValue("priv", value)}
                     name="priv"
                   >
-                    <Option value="1" style={{ width: 90 }}>
-                      1
+                    <Option value="2" style={{ width: 110 }}>
+                      Manager
                     </Option>
-                    <Option value="2" style={{ width: 90 }}>
-                      {" "}
-                      2
+                    <Option value="3" style={{ width: 110 }}>
+                      Customer
                     </Option>
                   </Select>
                   <Button
@@ -384,6 +417,52 @@ export default function LandingPage() {
                     }}
                   >
                     Edit Hall
+                  </Button>
+                </Form>
+              </div>
+            ) : null}
+            {auth.user.Priv == 3 ? (
+              <div>
+                <Divider orientation="left">Edit Details</Divider>
+                <Form onSubmit={editdetails.handleSubmit}>
+                  <Input
+                    placeholder="Enter New Password"
+                    name="Password"
+                    type="password"
+                    style={{
+                      display: "block",
+                      width: "70%",
+                      margin: "5px"
+                    }}
+                    onChange={editdetails.handleChange}
+                    value={editdetails.values.Password}
+                  />
+
+                  <TextArea
+                    placeholder="Enter New Address"
+                    name="Address"
+                    type="email"
+                    style={{
+                      display: "block",
+                      width: "90%",
+                      margin: "5px"
+                    }}
+                    rows={2}
+                    onChange={editdetails.handleChange}
+                    value={editdetails.values.Address}
+                  />
+
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    size="medium"
+                    style={{
+                      marginBottom: "5px",
+                      marginLeft: "7px",
+                      display: "inline"
+                    }}
+                  >
+                    Update Details
                   </Button>
                 </Form>
               </div>
