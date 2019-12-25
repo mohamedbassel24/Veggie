@@ -20,7 +20,7 @@ const Contact = () => {
         </Descriptions>
       </Layout.Content>
       <Layout.Footer style={{ textAlign: "center" }}>
-        Consultation.io ©4019 Created by Ahmed Khalifa
+        Consultation.io ©4019
       </Layout.Footer>
     </Layout>
   );

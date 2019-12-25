@@ -35,16 +35,13 @@ const MainPage = () => {
   const Events = dataa.map((event, i) => {
     let id = event.EventId;
     let url = "seats/" + id;
+    let urlz = event.EventPoster;
+
     return (
-      <Col span={6} style={{ height: 150, width: 300, margin: "9px" }}>
+      <Col key={i} span={6} style={{ height: 150, width: 300, margin: "9px" }}>
         <Card
           style={{ height: 150, width: 300, margin: "9px" }}
-          cover={
-            <img
-              alt={i + 1}
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-            />
-          }
+          cover={<img alt={i + 1} src={urlz} style={{ height: "200px" }} />}
           actions={
             auth.isAuthenticated === true && auth.user.Priv == 2
               ? [
@@ -60,6 +57,7 @@ const MainPage = () => {
                         .catch(err => message.error(err.data.ReturnedMsg));
                     }}
                   />,
+
                   <Link to={url} replace>
                     <Icon type="arrow-right" key="right" />
                   </Link>,
@@ -68,6 +66,24 @@ const MainPage = () => {
                   </Typography>
                 ]
               : [
+                  <Icon
+                    type="close-circle"
+                    key="setting"
+                    onClick={async () => {
+                      await axios
+                        .post(
+                          "http://localhost:6001/api/Reservations/Remove/",
+                          {
+                            EventId: event.EventId,
+                            Username: auth.user.username
+                          }
+                        )
+                        .then(res => message.success("Removed Reservation"))
+                        .catch(err =>
+                          message.error("Couldn't Remove Reservation")
+                        );
+                    }}
+                  />,
                   <Link to={url}>
                     <Icon type="arrow-right" key="right" />
                   </Link>,
@@ -93,7 +109,7 @@ const MainPage = () => {
         <Row gutter={16}>{Events}</Row>
       </Layout.Content>
       <Layout.Footer style={{ textAlign: "center" }}>
-        Veggie.io ©4019 Created by Ahmed Khalifa
+        Veggie.io ©2019
       </Layout.Footer>
     </Layout>
   );

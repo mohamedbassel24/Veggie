@@ -67,7 +67,7 @@ export default function LandingPage() {
       EventPoster: "",
       date: moment(),
       HallId: "",
-      file: null
+      file: ""
     },
     onSubmit: values => {
       let file = values.file;
@@ -76,21 +76,45 @@ export default function LandingPage() {
       reader.onloadend = async function(file) {
         let srcData = await file.target.result;
       };
-
+      console.log(values.file);
       axios
         .post("http://localhost:6001/api/Events/Create", {
           EventName: values.EventName,
           Description: values.Description,
-          EventPoster: values.EventPoster,
+
           Datetime: values.date,
           HallId: values.HallId,
           EventId: Math.random() * 100000000,
-          EventPoster: srcData
+          EventPoster: values.file
         })
         .then(res => {
           message.success("Event Added");
         })
-        .catch(err => message.error(err.data.Msg));
+        .catch(err => message.error("Couldn't add event"));
+    }
+  });
+  const UpdateEvent = useFormik({
+    initialValues: {
+      EventName: "",
+      Description: "",
+      EventPoster: "",
+      EventId: "",
+      HallId: ""
+    },
+    onSubmit: values => {
+      axios
+        .post("http://localhost:6001/api/Events/Update", {
+          EventName: values.EventName,
+          Description: values.Description,
+          EventPoster: values.EventPoster,
+
+          HallId: values.HallId,
+          EventId: values.EventId
+        })
+        .then(res => {
+          message.success("Event Edited");
+        })
+        .catch(err => message.error(err.data.ReturnedMsg));
     }
   });
   const createhall = useFormik({
@@ -314,17 +338,17 @@ export default function LandingPage() {
                     onChange={formik3.handleChange}
                     value={formik3.values.Description}
                   />
-                  <input
-                    id="file"
+                  <Input
+                    placeholder="Image URL"
                     name="file"
-                    type="file"
-                    onChange={event => {
-                      formik3.setFieldValue(
-                        "file",
-                        event.currentTarget.files[0]
-                      );
+                    type="text"
+                    style={{
+                      display: "inline-block",
+                      width: "70%",
+                      margin: "5px"
                     }}
-                    style={{ margin: "5px" }}
+                    onChange={formik3.handleChange}
+                    value={formik3.values.file}
                   />
                   <Input
                     placeholder="Enter Hall ID"
@@ -352,6 +376,70 @@ export default function LandingPage() {
                     }}
                   >
                     Create Event
+                  </Button>
+                </Form>
+                <Divider orientation="left">Edit Event</Divider>
+
+                <Form onSubmit={UpdateEvent.handleSubmit}>
+                  <Input
+                    placeholder="Event Name"
+                    name="EventName"
+                    type="text"
+                    style={{
+                      display: "inline-block",
+                      width: "70%",
+                      margin: "5px"
+                    }}
+                    onChange={UpdateEvent.handleChange}
+                    value={UpdateEvent.values.EventName}
+                  />
+                  <Input
+                    placeholder="Event ID"
+                    name="EventId"
+                    type="number"
+                    style={{
+                      display: "inline-block",
+                      width: "70%",
+                      margin: "5px"
+                    }}
+                    onChange={UpdateEvent.handleChange}
+                    value={UpdateEvent.values.EventId}
+                  />
+                  <TextArea
+                    placeholder="Event Description"
+                    rows={4}
+                    name="Description"
+                    style={{ display: "block", margin: "5px" }}
+                    onChange={UpdateEvent.handleChange}
+                    value={UpdateEvent.values.Description}
+                  />
+
+                  <Input
+                    placeholder="Enter Hall ID"
+                    name="HallId"
+                    type="number"
+                    id="username"
+                    style={{
+                      display: "inline-block",
+                      width: "70%",
+                      margin: "5px"
+                    }}
+                    onChange={UpdateEvent.handleChange}
+                    value={UpdateEvent.values.HallId}
+                  />
+
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    size="medium"
+                    id="username"
+                    style={{
+                      marginBottom: "5px",
+                      marginLeft: "7px",
+                      display: "inline"
+                    }}
+                  >
+                    Edit Event
                   </Button>
                 </Form>
                 <Divider orientation="left">New Hall</Divider>
@@ -391,7 +479,7 @@ export default function LandingPage() {
                       margin: "5px"
                     }}
                     onChange={edithall.handleChange}
-                    value={edithall.values.seatcount}
+                    value={edithall.values.hallid}
                   />
                   <Input
                     placeholder="Seat Count"
@@ -483,7 +571,7 @@ export default function LandingPage() {
         )}
       </Layout.Content>
       <Layout.Footer style={{ textAlign: "center" }}>
-        Consultation.io ©2019 Created by Ahmed Khalifa
+        Consultation.io ©2019
       </Layout.Footer>
     </Layout>
   );
