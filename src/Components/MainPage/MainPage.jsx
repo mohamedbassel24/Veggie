@@ -1,14 +1,88 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./MainPage.css";
+import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-
-import { Layout, Row, Col, Card, Icon } from "antd";
+import axios from "axios";
+import { Layout, Row, Col, Card, Icon, message } from "antd";
 import NavBar from "../LandingPage/NavBar/NavBar";
 import Meta from "antd/lib/card/Meta";
+import moment from "moment";
+
 import Typography from "antd/lib/typography/Typography";
 const MainPage = () => {
+  const [dataa, setData] = useState([]);
+  function HomeButton(str) {
+    const history = useHistory();
+
+    history.push("/seats" + str);
+  }
+  const handlePageChange = id => {
+    let string = "http://localhost:3000/seats/" + id;
+    window.location.assign(string);
+  };
+  useEffect(() => {
+    async function fetchData() {
+      await axios
+        .get("http://localhost:6001/api/Events/")
+        .then(async res => await setData(res.data));
+    }
+    fetchData();
+  }, []);
   const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
+  console.log(dataa);
+  const Events = dataa.map((event, i) => {
+    let id = event.EventId;
+    let url = "seats/" + id;
+    return (
+      <Col span={6} style={{ height: 150, width: 300, margin: "9px" }}>
+        <Card
+          style={{ height: 150, width: 300, margin: "9px" }}
+          cover={
+            <img
+              alt={i + 1}
+              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+            />
+          }
+          actions={
+            auth.isAuthenticated === true && auth.user.Priv == 2
+              ? [
+                  <Icon
+                    type="close-circle"
+                    key="setting"
+                    onClick={() => {
+                      axios
+                        .post("http://localhost:6001/api/Events/Remove/", {
+                          EventId: event.EventId
+                        })
+                        .then(res => message.success(res.data.ReturnMsg))
+                        .catch(err => message.error(err.data.ReturnedMsg));
+                    }}
+                  />,
+                  <Link to={url} replace>
+                    <Icon type="arrow-right" key="right" />
+                  </Link>,
+                  <Typography>
+                    <Icon type="number" key="right" /> {event.HallId}
+                  </Typography>
+                ]
+              : [
+                  <Link to={url}>
+                    <Icon type="arrow-right" key="right" />
+                  </Link>,
+                  <Typography>
+                    <Icon type="number" key="right" /> {event.HallId}
+                  </Typography>
+                ]
+          }
+        >
+          <Meta title={event.EventName} description={event.Description} />
+          <Typography>{moment(event.Datetime).format("MMM Do YY")}</Typography>
+        </Card>
+      </Col>
+    );
+  });
   return (
     <Layout>
       <NavBar />
@@ -16,71 +90,7 @@ const MainPage = () => {
         className="backgrn"
         style={{ padding: "40px 50px", textAlign: "center" }}
       >
-        <Row gutter={[16, 16]}>
-          <Col span={6}>
-            <Card
-              style={{ width: 300 }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
-              }
-              actions={[
-                <Icon type="close-circle" key="setting" />,
-                <Icon type="arrow-right" key="right" />,
-                <Typography>
-                  <Icon type="number" key="right" /> 1
-                </Typography>
-              ]}
-            >
-              <Meta title="Event A" description="This is my event" />
-              <Typography>Date here</Typography>
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card
-              style={{ width: 300 }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
-              }
-              actions={[
-                <Icon type="close-circle" key="setting" />,
-                <Icon type="arrow-right" key="right" />,
-                <Typography>
-                  <Icon type="number" key="right" /> 1
-                </Typography>
-              ]}
-            >
-              <Meta title="Event A" description="This is my event" />
-              <Typography>Date here</Typography>
-            </Card>
-          </Col>
-          <Col span={6}>
-            <Card
-              style={{ width: 300 }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                />
-              }
-              actions={[
-                <Icon type="close-circle" key="setting" />,
-                <Icon type="arrow-right" key="right" />,
-                <Typography>
-                  <Icon type="number" key="right" /> 1
-                </Typography>
-              ]}
-            >
-              <Meta title="Event A" description="This is my event" />
-              <Typography>Date here</Typography>
-            </Card>
-          </Col>
-        </Row>
+        <Row gutter={16}>{Events}</Row>
       </Layout.Content>
       <Layout.Footer style={{ textAlign: "center" }}>
         Veggie.io ©4019 Created by Ahmed Khalifa
@@ -88,5 +98,4 @@ const MainPage = () => {
     </Layout>
   );
 };
-
 export default MainPage;

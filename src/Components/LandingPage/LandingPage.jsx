@@ -12,7 +12,7 @@ import {
   Icon,
   message,
   Divider,
-  Upload
+  Alert
 } from "antd";
 import "./LandingPage.css";
 import moment from "moment";
@@ -65,7 +65,7 @@ export default function LandingPage() {
       EventName: "",
       Description: "",
       EventPoster: "",
-      Datetime: moment(),
+      date: moment(),
       HallId: "",
       file: null
     },
@@ -82,7 +82,7 @@ export default function LandingPage() {
           EventName: values.EventName,
           Description: values.Description,
           EventPoster: values.EventPoster,
-          Datetime: values.Datetime,
+          Datetime: values.date,
           HallId: values.HallId,
           EventId: Math.random() * 100000000,
           EventPoster: srcData
@@ -132,7 +132,7 @@ export default function LandingPage() {
       Address: ""
     },
     validationSchema: yup.object().shape({
-      password: yup
+      Password: yup
         .string()
         .min(8, "Password Must be atleast 8 characters")
         .required("Enter a New Password"),
@@ -437,7 +437,14 @@ export default function LandingPage() {
                     onChange={editdetails.handleChange}
                     value={editdetails.values.Password}
                   />
-
+                  {editdetails.errors.Password &&
+                  editdetails.touched.Password ? (
+                    <Alert
+                      message={editdetails.errors.Password}
+                      type="error"
+                      showIcon
+                    />
+                  ) : null}
                   <TextArea
                     placeholder="Enter New Address"
                     name="Address"
@@ -451,14 +458,19 @@ export default function LandingPage() {
                     onChange={editdetails.handleChange}
                     value={editdetails.values.Address}
                   />
-
+                  {editdetails.errors.Address && editdetails.touched.Address ? (
+                    <Alert
+                      message={editdetails.errors.Address}
+                      type="error"
+                      showIcon
+                    />
+                  ) : null}
                   <Button
                     type="primary"
                     htmlType="submit"
                     size="medium"
                     style={{
-                      marginBottom: "5px",
-                      marginLeft: "7px",
+                      margin: "5px",
                       display: "inline"
                     }}
                   >

@@ -4,8 +4,9 @@ import LandingPage from "./Components/LandingPage/LandingPage";
 import Login from "./Components/Login/Login";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { store, presistor } from "./store";
 import { useSelector, useDispatch } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 import Seats from "./Components/Seats/Seats";
 import MainPage from "./Components/MainPage/MainPage";
@@ -33,20 +34,18 @@ function PrivateRoute({ children, ...rest }) {
 }
 function App() {
   return (
-    <Provider store={store}>
-      <Route>
-        <Switch>
-          <Route path="/login" component={Login} />
-          <PrivateRoute path="/seats">
-            <Seats />
-          </PrivateRoute>
-          <Route path="/events" component={MainPage} />
-          <Route path="/contact" component={Contact} />
+    <Route>
+      <Switch>
+        <Route path="/login" component={Login} />
 
-          <Route path="/" component={LandingPage} />
-        </Switch>
-      </Route>
-    </Provider>
+        <Route path="/seats/:ids" component={Seats} />
+
+        <Route path="/events" component={MainPage} />
+        <Route path="/contact" component={Contact} />
+
+        <Route path="/" component={LandingPage} />
+      </Switch>
+    </Route>
   );
 }
 

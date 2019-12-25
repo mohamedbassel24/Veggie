@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./seats.css";
 import { useSelector, useDispatch } from "react-redux";
 import { AppState } from "../../reducers";
 import { Layout, Checkbox, Row, Col, Button } from "antd";
 import NavBar from "../LandingPage/NavBar/NavBar";
 
-const Seats = () => {
+const Seats = props => {
   const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
+  useEffect(() => {
+    console.log(props);
+    async function fetchData() {
+      await axios
+        .get("http://localhost:6001/api/Reservations/" + props.match.params.ids)
+        .then(async res => console.log(res));
+    }
+    fetchData();
+  }, []);
   function save(event) {
     console.log(event.target.checked);
   }
